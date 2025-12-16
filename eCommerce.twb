@@ -13,6 +13,8 @@
     <ObjectModelEncapsulateLegacy />
     <ObjectModelExtractV2 />
     <ObjectModelTableType />
+    <ParameterAction />
+    <ParameterActionClearSelection />
     <SchemaViewerObjectModel />
     <SetMembershipControl />
     <SheetIdentifierTracking />
@@ -151,6 +153,21 @@
           <member value='&quot;Orders&quot;' />
         </members>
       </column>
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[Parameter 3]' type='palette'>
+            <map to='#e15759'>
+              <bucket>&quot;Orders&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Profit&quot;</bucket>
+            </map>
+            <map to='#ffffff'>
+              <bucket>&quot;Sales&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
     </datasource>
     <datasource caption='e-commerce-ops-analytics' inline='true' name='federated.1ebka7k12b1e1o18kpxhy0jpd5nn' version='18.1'>
       <connection class='federated'>
@@ -629,11 +646,32 @@
       <column caption='% Metric vs Last Month Label - Neg' datatype='string' name='[% Sales vs Last Month Label - Pos (copy)_0858458490105869]' role='measure' type='nominal'>
         <calculation class='tableau' formula='IF [Calculation_0858458468478980] = -1 then &quot;▼&quot; end' />
       </column>
+      <column caption='Button Colour - Orders' datatype='string' name='[Button Colour - Sales (copy) (copy)_0684463596490767]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF [Parameters].[Parameter 3] = &apos;Orders&apos; THEN &apos;Orders&apos; ELSE &apos;Other&apos; END' />
+      </column>
+      <column caption='Button Colour - Profit' datatype='string' name='[Button Colour - Sales (copy)_0684463596482574]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF [Parameters].[Parameter 3] = &apos;Profit&apos; THEN &apos;Profit&apos; ELSE &apos;Other&apos; END' />
+      </column>
       <column caption='Metric' datatype='real' name='[Calculation_0684463237517312]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='(IF [Parameters].[Parameter 3] = &apos;Sales&apos; THEN SUM([product_retail_price])&#13;&#10;ELSEIF [Parameters].[Parameter 3] = &apos;Profit&apos; THEN SUM([Calculation_0858458473312261])&#13;&#10;ELSEIF [Parameters].[Parameter 3] = &apos;Orders&apos; THEN COUNTD([order_id])&#13;&#10;END)' />
       </column>
       <column caption='Order Flag' datatype='integer' name='[Calculation_0684463238172673]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='{fixed [Calculation_0858458464305154],[user_country],[user_state],[product_brand],[product_category],[order_status],[order_id] : COUNTD([order_id])}' />
+      </column>
+      <column caption='Sales Label' datatype='string' name='[Calculation_0684463592968198]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='&apos;Sales&apos;' />
+      </column>
+      <column caption='Profit Label' datatype='string' name='[Calculation_0684463593721864]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='&apos;Profit&apos;' />
+      </column>
+      <column caption='Orders Label' datatype='string' name='[Calculation_0684463593873417]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='&apos;Orders&apos;' />
+      </column>
+      <column caption='Dummy' datatype='integer' name='[Calculation_0684463594582027]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <column caption='Button Colour - Sales' datatype='string' name='[Calculation_0684463596044301]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF [Parameters].[Parameter 3] = &apos;Sales&apos; THEN &apos;Sales&apos; ELSE &apos;Other&apos; END' />
       </column>
       <column caption='User Location' datatype='spatial' name='[Calculation_0858458445193216]' role='measure' type='nominal'>
         <calculation class='tableau' formula='MAKEPOINT([user_latitude],[user_longitude])' />
@@ -717,6 +755,9 @@
       <column caption='User Street Address' datatype='string' name='[user_street_address]' role='dimension' type='nominal' />
       <column caption='User Traffic Source' datatype='string' name='[user_traffic_source]' role='dimension' type='nominal' />
       <column-instance column='[order_id]' derivation='CountD' name='[ctd:order_id:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Button Colour - Sales (copy) (copy)_0684463596490767]' derivation='None' name='[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Button Colour - Sales (copy)_0684463596482574]' derivation='None' name='[none:Button Colour - Sales (copy)_0684463596482574:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Calculation_0684463596044301]' derivation='None' name='[none:Calculation_0684463596044301:nk]' pivot='key' type='nominal' />
       <column-instance column='[order_status]' derivation='None' name='[none:order_status:nk]' pivot='key' type='nominal' />
       <column-instance column='[user_gender]' derivation='None' name='[none:user_gender:nk]' pivot='key' type='nominal' />
       <column-instance column='[Calculation_0858458487136266]' derivation='User' name='[pcto:usr:Calculation_0858458487136266:qk]' pivot='key' type='quantitative'>
@@ -1328,6 +1369,30 @@
               <bucket>&quot;Returned&quot;</bucket>
             </map>
           </encoding>
+          <encoding attr='color' field='[none:Calculation_0684463596044301:nk]' type='palette'>
+            <map to='#d3d3d3'>
+              <bucket>&quot;Other&quot;</bucket>
+            </map>
+            <map to='#ffffff'>
+              <bucket>&quot;Sales&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[none:Button Colour - Sales (copy)_0684463596482574:nk]' type='palette'>
+            <map to='#d5d5d5'>
+              <bucket>&quot;Other&quot;</bucket>
+            </map>
+            <map to='#ffffff'>
+              <bucket>&quot;Profit&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]' type='palette'>
+            <map to='#d5d5d5'>
+              <bucket>&quot;Other&quot;</bucket>
+            </map>
+            <map to='#ffffff'>
+              <bucket>&quot;Orders&quot;</bucket>
+            </map>
+          </encoding>
         </style-rule>
       </style>
       <semantic-values>
@@ -1502,6 +1567,36 @@
         <param name='target' value='Dashboard 1' />
       </command>
     </action>
+    <edit-parameter-action caption='Sales Button' name='[Action6_A0542CE5CAE345A8ABE6FCAE0263773D]'>
+      <activation type='on-select' />
+      <source dashboard='Dashboard 1' type='sheet' worksheet='Sales Button' />
+      <agg-type type='attr' />
+      <clear-option type='assign-fixed-value' value='s:LROOT:&apos;Sales&apos;' />
+      <params>
+        <param name='source-field' value='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463592968198:nk]' />
+        <param name='target-parameter' value='[Parameters].[Parameter 3]' />
+      </params>
+    </edit-parameter-action>
+    <edit-parameter-action caption='Profit Button' name='[Action7_C3C2695B4A9C4B76BC849E2B7998090B]'>
+      <activation type='on-select' />
+      <source dashboard='Dashboard 1' type='sheet' worksheet='Profit Button' />
+      <agg-type type='attr' />
+      <clear-option type='do-nothing' value='s:LROOT:' />
+      <params>
+        <param name='source-field' value='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593721864:nk]' />
+        <param name='target-parameter' value='[Parameters].[Parameter 3]' />
+      </params>
+    </edit-parameter-action>
+    <edit-parameter-action caption='Orders Button' name='[Action8_3B40B81AAC51463E807FFF781F011672]'>
+      <activation type='on-select' />
+      <source dashboard='Dashboard 1' type='sheet' worksheet='Orders Button' />
+      <agg-type type='attr' />
+      <clear-option type='do-nothing' value='s:LROOT:' />
+      <params>
+        <param name='source-field' value='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593873417:nk]' />
+        <param name='target-parameter' value='[Parameters].[Parameter 3]' />
+      </params>
+    </edit-parameter-action>
   </actions>
   <worksheets>
     <worksheet name='Monthly Orders %'>
@@ -3201,6 +3296,237 @@
         <cols>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[Longitude (generated)]</cols>
       </table>
       <simple-id uuid='{661B449D-178D-4E67-BB39-F2D9879C1D33}' />
+    </worksheet>
+    <worksheet name='Orders Button'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='e-commerce-ops-analytics' name='federated.1ebka7k12b1e1o18kpxhy0jpd5nn' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Metric' datatype='string' name='[Parameter 3]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sales&quot;'>
+              <calculation class='tableau' formula='&quot;Sales&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.1ebka7k12b1e1o18kpxhy0jpd5nn'>
+            <column caption='Button Colour - Orders' datatype='string' name='[Button Colour - Sales (copy) (copy)_0684463596490767]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='IF [Parameters].[Parameter 3] = &apos;Orders&apos; THEN &apos;Orders&apos; ELSE &apos;Other&apos; END' />
+            </column>
+            <column caption='Orders Label' datatype='string' name='[Calculation_0684463593873417]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='&apos;Orders&apos;' />
+            </column>
+            <column caption='Dummy' datatype='integer' name='[Calculation_0684463594582027]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='1' />
+            </column>
+            <column-instance column='[Calculation_0684463594582027]' derivation='Max' name='[max:Calculation_0684463594582027:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Button Colour - Sales (copy) (copy)_0684463596490767]' derivation='None' name='[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_0684463593873417]' derivation='None' name='[none:Calculation_0684463593873417:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='height' value='45' />
+            <format attr='width' value='100' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Square' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]' />
+              <size column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[max:Calculation_0684463594582027:qk]' />
+              <text column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593873417:nk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run fontname='Tableau Bold'>&lt;</run>
+                <run fontname='Tableau Bold'>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593873417:nk]</run>
+                <run fontname='Tableau Bold'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='top' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='size' value='0.2738673985004425' />
+              </style-rule>
+              <style-rule element='pane'>
+                <format attr='minheight' value='-1' />
+                <format attr='maxheight' value='-1' />
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{C70690E5-F65E-4030-9380-CD3757F028EC}' />
+    </worksheet>
+    <worksheet name='Profit Button'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='e-commerce-ops-analytics' name='federated.1ebka7k12b1e1o18kpxhy0jpd5nn' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Metric' datatype='string' name='[Parameter 3]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sales&quot;'>
+              <calculation class='tableau' formula='&quot;Sales&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.1ebka7k12b1e1o18kpxhy0jpd5nn'>
+            <column caption='Button Colour - Profit' datatype='string' name='[Button Colour - Sales (copy)_0684463596482574]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='IF [Parameters].[Parameter 3] = &apos;Profit&apos; THEN &apos;Profit&apos; ELSE &apos;Other&apos; END' />
+            </column>
+            <column caption='Profit Label' datatype='string' name='[Calculation_0684463593721864]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='&apos;Profit&apos;' />
+            </column>
+            <column caption='Dummy' datatype='integer' name='[Calculation_0684463594582027]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='1' />
+            </column>
+            <column-instance column='[Calculation_0684463594582027]' derivation='Max' name='[max:Calculation_0684463594582027:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Button Colour - Sales (copy)_0684463596482574]' derivation='None' name='[none:Button Colour - Sales (copy)_0684463596482574:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_0684463593721864]' derivation='None' name='[none:Calculation_0684463593721864:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='height' value='45' />
+            <format attr='width' value='100' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Square' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy)_0684463596482574:nk]' />
+              <size column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[max:Calculation_0684463594582027:qk]' />
+              <text column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593721864:nk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run fontname='Tableau Bold'>&lt;</run>
+                <run fontname='Tableau Bold'>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593721864:nk]</run>
+                <run fontname='Tableau Bold'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='top' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='size' value='0.2738673985004425' />
+              </style-rule>
+              <style-rule element='pane'>
+                <format attr='minheight' value='-1' />
+                <format attr='maxheight' value='-1' />
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{F50E563B-4990-49AA-BCE9-DF8E39AD9AD0}' />
+    </worksheet>
+    <worksheet name='Sales Button'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='e-commerce-ops-analytics' name='federated.1ebka7k12b1e1o18kpxhy0jpd5nn' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Metric' datatype='string' name='[Parameter 3]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sales&quot;'>
+              <calculation class='tableau' formula='&quot;Sales&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.1ebka7k12b1e1o18kpxhy0jpd5nn'>
+            <column caption='Sales Label' datatype='string' name='[Calculation_0684463592968198]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='&apos;Sales&apos;' />
+            </column>
+            <column caption='Dummy' datatype='integer' name='[Calculation_0684463594582027]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='1' />
+            </column>
+            <column caption='Button Colour - Sales' datatype='string' name='[Calculation_0684463596044301]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='IF [Parameters].[Parameter 3] = &apos;Sales&apos; THEN &apos;Sales&apos; ELSE &apos;Other&apos; END' />
+            </column>
+            <column-instance column='[Calculation_0684463594582027]' derivation='Max' name='[max:Calculation_0684463594582027:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Calculation_0684463592968198]' derivation='None' name='[none:Calculation_0684463592968198:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_0684463596044301]' derivation='None' name='[none:Calculation_0684463596044301:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='height' value='41' />
+            <format attr='width' value='100' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Square' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463596044301:nk]' />
+              <size column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[max:Calculation_0684463594582027:qk]' />
+              <text column='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463592968198:nk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run fontname='Tableau Bold'>&lt;</run>
+                <run fontname='Tableau Bold'>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463592968198:nk]</run>
+                <run fontname='Tableau Bold'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='top' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='size' value='0.2738673985004425' />
+              </style-rule>
+              <style-rule element='pane'>
+                <format attr='minheight' value='-1' />
+                <format attr='maxheight' value='-1' />
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{CB685A4B-CB05-44FB-83AC-8298C6CF7BD0}' />
     </worksheet>
     <worksheet name='Sales By Brand'>
       <table>
@@ -5128,6 +5454,30 @@
                         <format attr='margin' value='4' />
                       </zone-style>
                     </zone>
+                    <zone h='5990' id='77' name='Sales Button' pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463596044301:nk]' type-v2='color' w='18814' x='57028' y='74479'>
+                      <zone-style>
+                        <format attr='border-color' value='#000000' />
+                        <format attr='border-style' value='none' />
+                        <format attr='border-width' value='0' />
+                        <format attr='margin' value='4' />
+                      </zone-style>
+                    </zone>
+                    <zone h='5990' id='79' name='Profit Button' pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy)_0684463596482574:nk]' type-v2='color' w='18814' x='57028' y='80469'>
+                      <zone-style>
+                        <format attr='border-color' value='#000000' />
+                        <format attr='border-style' value='none' />
+                        <format attr='border-width' value='0' />
+                        <format attr='margin' value='4' />
+                      </zone-style>
+                    </zone>
+                    <zone h='5990' id='81' name='Orders Button' pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]' type-v2='color' w='18814' x='57028' y='86459'>
+                      <zone-style>
+                        <format attr='border-color' value='#000000' />
+                        <format attr='border-style' value='none' />
+                        <format attr='border-width' value='0' />
+                        <format attr='margin' value='4' />
+                      </zone-style>
+                    </zone>
                     <zone-style>
                       <format attr='border-color' value='#000000' />
                       <format attr='border-style' value='none' />
@@ -5227,18 +5577,47 @@
             <format attr='background-color' value='#f5f5f5' />
           </zone-style>
         </zone>
-        <zone custom-title='true' h='5729' id='23' mode='compact' param='[Parameters].[Parameter 1]' type-v2='paramctrl' w='11713' x='85359' y='2214'>
+        <zone custom-title='true' h='4036' id='23' mode='compact' param='[Parameters].[Parameter 1]' type-v2='paramctrl' w='13909' x='84261' y='2474'>
           <formatted-text>
             <run fontalignment='1'>Month/Year</run>
           </formatted-text>
         </zone>
+        <zone h='5729' id='75' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='24524' x='74012' y='6901'>
+          <zone h='5729' id='76' name='Sales Button' show-title='false' w='8199' x='74012' y='6901'>
+            <layout-cache fixed-size-h='145' fixed-size-w='117' type-h='fixed' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='0' />
+            </zone-style>
+          </zone>
+          <zone h='5729' id='78' name='Profit Button' show-title='false' w='8199' x='82211' y='6901'>
+            <layout-cache fixed-size-w='117' type-h='fixed' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='0' />
+            </zone-style>
+          </zone>
+          <zone h='5729' id='80' name='Orders Button' show-title='false' w='8126' x='90410' y='6901'>
+            <layout-cache fixed-size-w='117' type-h='fixed' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='0' />
+            </zone-style>
+          </zone>
+        </zone>
       </zones>
       <devicelayouts>
         <devicelayout auto-generated='true' name='Phone'>
-          <size maxheight='2350' minheight='2350' sizing-mode='vscroll' />
+          <size maxheight='2700' minheight='2700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='74' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='97916' id='73' param='vert' type-v2='layout-flow' w='98828' x='586' y='1042'>
+            <zone h='100000' id='83' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='97916' id='82' param='vert' type-v2='layout-flow' w='98828' x='586' y='1042'>
                 <zone fixed-size='992' forceUpdate='true' h='12760' id='11' type-v2='text' w='85725' x='14275' y='0'>
                   <formatted-text>
                     <run fontcolor='#555555' fontname='Tableau Light' fontsize='20'>Monthly Sales Dashboard </run>
@@ -5274,10 +5653,67 @@
                     <format attr='padding' value='0' />
                   </zone-style>
                 </zone>
-                <zone custom-title='true' h='5729' id='23' mode='compact' param='[Parameters].[Parameter 1]' type-v2='paramctrl' w='11713' x='85359' y='2214'>
+                <zone custom-title='true' h='4036' id='23' mode='compact' param='[Parameters].[Parameter 1]' type-v2='paramctrl' w='13909' x='84261' y='2474'>
                   <formatted-text>
                     <run fontalignment='1'>Month/Year</run>
                   </formatted-text>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='44' h='5729' id='76' is-fixed='true' name='Sales Button' show-title='false' w='8199' x='74012' y='6901'>
+                  <layout-cache fixed-size-h='145' fixed-size-w='117' type-h='fixed' type-w='fixed' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='5990' id='77' name='Sales Button' pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463596044301:nk]' type-v2='color' w='18814' x='57028' y='74479'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='44' h='5729' id='78' is-fixed='true' name='Profit Button' show-title='false' w='8199' x='82211' y='6901'>
+                  <layout-cache fixed-size-w='117' type-h='fixed' type-w='fixed' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='5990' id='79' name='Profit Button' pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy)_0684463596482574:nk]' type-v2='color' w='18814' x='57028' y='80469'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='44' h='5729' id='80' is-fixed='true' name='Orders Button' show-title='false' w='8126' x='90410' y='6901'>
+                  <layout-cache fixed-size-w='117' type-h='fixed' type-w='fixed' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='5990' id='81' name='Orders Button' pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]' type-v2='color' w='18814' x='57028' y='86459'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -5446,7 +5882,7 @@
                   </zone-style>
                 </zone>
                 <zone fixed-size='194' h='26302' id='41' is-fixed='true' name='Sales By Category' show-title='false' w='19034' x='78770' y='36198'>
-                  <layout-cache fixed-size-h='884' minwidth='180' type-h='fixed' type-w='scalable' />
+                  <layout-cache minwidth='180' type-h='fixed' type-w='scalable' />
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -5573,6 +6009,30 @@
           <geo-search-visibility value='1' />
           <map-navigation value='1' />
           <layer-control toolbar-button-enabled='false' />
+        </viewpoint>
+        <viewpoint name='Orders Button'>
+          <zoom type='entire-view' />
+          <highlight>
+            <color-one-way>
+              <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]</field>
+            </color-one-way>
+          </highlight>
+        </viewpoint>
+        <viewpoint name='Profit Button'>
+          <zoom type='entire-view' />
+          <highlight>
+            <color-one-way>
+              <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy)_0684463596482574:nk]</field>
+            </color-one-way>
+          </highlight>
+        </viewpoint>
+        <viewpoint name='Sales Button'>
+          <zoom type='entire-view' />
+          <highlight>
+            <color-one-way>
+              <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463596044301:nk]</field>
+            </color-one-way>
+          </highlight>
         </viewpoint>
         <viewpoint name='Sales By Brand' />
         <viewpoint name='Sales By Category' />
@@ -6147,6 +6607,118 @@
         </highlight>
       </viewpoint>
       <simple-id uuid='{2102D22A-AE5A-4B6B-ABFA-299DF5732BD4}' />
+    </window>
+    <window class='worksheet' name='Sales Button'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463596044301:nk]' type='color' />
+            <card mode='compact' param='[Parameters].[Parameter 3]' type='parameter' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[:Measure Names]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463592968198:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593873417:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463596044301:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[sum:Calculation_0684463593164807:qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{BE9E0F3B-8E8E-4B94-B287-FE0457C75F1A}' />
+    </window>
+    <window class='worksheet' name='Profit Button'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy)_0684463596482574:nk]' type='color' />
+            <card mode='compact' param='[Parameters].[Parameter 3]' type='parameter' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[:Measure Names]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy)_0684463596482574:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463592968198:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593721864:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593873417:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[sum:Calculation_0684463593164807:qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{45E9A349-E2A6-4812-BAE2-E92FE9C228D8}' />
+    </window>
+    <window class='worksheet' name='Orders Button'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]' type='color' />
+            <card mode='compact' param='[Parameters].[Parameter 3]' type='parameter' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[:Measure Names]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Button Colour - Sales (copy) (copy)_0684463596490767:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463592968198:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[none:Calculation_0684463593873417:nk]</field>
+            <field>[federated.1ebka7k12b1e1o18kpxhy0jpd5nn].[sum:Calculation_0684463593164807:qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{72E439DF-E0B5-4179-BE45-46078E998A64}' />
     </window>
     <window class='worksheet' hidden='true' name='Monthly Orders %' tab-color='#4f779a'>
       <cards>
@@ -6951,6 +7523,69 @@
       JgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkC
       IE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDS
       BEDaHxfEMNyKMWmoAAAAAElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='49' name='Orders Button' width='104'>
+      iVBORw0KGgoAAAANSUhEUgAAAGgAAAAxCAYAAAA2neyeAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAEA0lEQVR4nO3bSyjsXwDA8e+dh2TMDDUaCzGUSW4TJWYxNkixkFiYpYiQUrKTFFuWnllR
+      ojSNPDYkj0lWGivyGKlh4TmTKUbm8V/8u8q9+t+u/984+p/P9vc7vznnfDuzmMe3aDQaRRKW
+      4rMnIP0zGUhwMpDgZCDByUCCk4EEJwMJTgYSnAwkOBlIcDKQ4GQgwaneM2h/f/+/nof0htzc
+      XHmCRCcDCU4GEpwMJDgZSHAykOBkIMHJQIKTgQQnAwnuSwRyu910dXVRU1PD4OAgl5eXfzR+
+      eHiYvb29D5rdxxI+0OLiIo2NjWxsbODz+ZiamqK+vh6v1/vZU4uJd31YGitXV1eMjo5iMpmY
+      mJjAYDDgcrno7OxkfHyc/v5+Tk5O8Hg8WK1WPB4Per0es9lMIBBgYWGBQCDw6sQFAgFmZ2fx
+      eDwUFxdTWVmJUqlkd3cXn89HUVERbreb7OxsjEYjOzs7bG5ukpSUhM1mw2KxoFQqY7YHQgc6
+      ODjg4uKCrq4uDAYDAIWFheTl5eF2u/H5fKyurjI1NUVVVRUOh4OmpiY0Gg3Nzc14vV50Oh2B
+      QIDa2lru7+9pb2/n7OyMrKwsent7OT8/p7W1lenpafb29iguLsbpdDI4OMjCwgKjo6MkJycT
+      DodxOp1MT09jNBpjtgdCv8UFg0FCodCrDYmPj0ev1/P4+EgoFALg4eEBp9NJXV0d5eXlrK2t
+      cXV1xcjICNvb27S0tACwvb3NwcEBAwMDTE5OYrfbWVxc5Pb2FoDr62tWVlZob2/HYrFwdHSE
+      yWRibm4Ol8uFw+EgOTk5pnsg9An64UcIgEgkQjgcfnVdoVDQ29tLdXU1AGNjY+h0Osxm86v7
+      Tk9PiUajzMzMMD8/z+HhIX6//yVQQkICw8PDFBQUAGC1WllfX6esrIycnBxaWlooKSn5yKX+
+      QuhAmZmZJCUlsbOzQ2VlJQqFgpubG46Pj0lNTUWj0QB/n6qMjIyXcSrV28tSqVQolUosFgtG
+      oxGbzYZKpSIlJQUAjUZDWlray/12u52SkhK2trZwOBx0d3czPj5Ofn7+B676pznH7JXewWw2
+      s7S0RE9PD3l5eUQiEdRqNQ0NDbS1tREXF/fmuJ6eHjo6OigtLUWr1ZKeno7NZqO5uZm4uDiG
+      hoYIBoMAfP/+HavV+sszgsEgfX19LC8vEw6HUSgUVFRUkJOT86Fr/tm39/w/6DO+8vb7/Tw9
+      PaHX64mPj//t/ZFIBL/fj1arRa1Wv7oWDoe5u7tDq9X+9lnPz8/c3d2h0WhITEz8V2v4U7m5
+      uV8n0P+R/E3CFyADCU4GEpwMJDgZSHAykOBkIMHJQIKTgQQnAwlOBhKcDCQ4GUhwMpDg3vV1
+      gxQ7fwG4zF5jcugUAwAAAABJRU5ErkJggg==
+    </thumbnail>
+    <thumbnail height='49' name='Profit Button' width='104'>
+      iVBORw0KGgoAAAANSUhEUgAAAGgAAAAxCAYAAAA2neyeAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAADWUlEQVR4nO3bP0h6WwDA8e/PvwkicX+WZoXkUKYoBI1NLUE0BA3R0hxG1NhUWzTllGFG
+      RBA1OFmbkgROERSE/bH2FCy7dKELkb0teI/XA6P3PJd3Pqv3Hs7he88Bvfjr4+PjA0lYpmZP
+      QPpnMpDgZCDByUCCk4EEJwMJTgYSnAwkOBlIcDKQ4GQgwclAgrN856arq6ufnof0N0KhkNxB
+      opOBBCcDCU4GEpwMJDgZSHAykOBkIMHJQIKTgQT3rZ96mkFVVRKJBKqqYrfbGRgYYHBwkK6u
+      robHqtfrpFIpNjY2UBSFra0t4vE4AKurq7S0tPD09ITD4cDpdP70UhpimEC6rpPNZqlUKgCk
+      02lsNhuLi4tMTk42NNb9/T27u7sMDQ0xMzODoij09/cDYDabqVarTE1NMTExwezs7I+vpRGG
+      O+JGRkYoFoscHR3h8Xg4ODigWq1SKBQoFAqoqko+n6dWqwFwfn7O8vIyd3d3ANRqNfL5PLqu
+      4/P5KJfLmM1motEo0WgUTdM+Py+VShweHlIqlZq2XsPsoL/y+/309fVxeXnJy8sLiUSCt7c3
+      2tvbOTs7I5lMUigUWFpawmazkclkWFlZoaOjg+3tbXRdZ29vj1wux+bmJolEAoC5uTni8Tia
+      ppHL5cjlcsRiMXp7e5uyTsPtIF3XqVQqZLNZTk9P6enpweVyAXB7e8vNzQ0LCwu43W729/cJ
+      BoNks1kCgQDpdJpgMEgymcTpdLK2tsbx8TFer/dz/EgkQiaTwePxEIvFKBaLTT3mDLeDTk5O
+      GB4eBqCzs5P5+XnsdjsAXq+XVCqF3++nUqlQLpcZHx/H5XLh9/u5uLhAVdVmTr9hhgsUiUSY
+      np4mGAzS3d2N1WpF0zQA3G43v3///rzWYrHw+PgIwPv7Ow6HA4vFWEs23BHn8/kYHR0lEAhg
+      tVq/vM7j8bCzs8P19TXhcJiHhwdSqdSfAn6lra2NsbExkskk4XCY9fX1n1xCQ3595/9BRnrl
+      Xa/XeX5+prW1FZOpsedR0zReX19RFAWz2fwvzfBroVDIeEdco0wmE4qifOtep9PZ9C+qhjvi
+      /m9kIMHJQIKTgQQnAwlOBhKcDCQ4GUhwMpDgZCDByUCCk4EEJwMJTgYS3LfeB0n/nT8AWMMP
+      Q8xqsF0AAAAASUVORK5CYII=
+    </thumbnail>
+    <thumbnail height='45' name='Sales Button' width='104'>
+      iVBORw0KGgoAAAANSUhEUgAAAGgAAAAtCAYAAABCiS5+AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAADXElEQVR4nO3bP0h6axzH8Y9aYoOSmZJ4Mgs3p7aCChpKWmpyKShaG6KhqSVoDpqkqT+g
+      UJygggyCgiAoHWvwz9IQFjp04hRIYh0/d7hcodu9P/jBvb/zyO95jY88h+fL+5zDWbSQJCRh
+      Wc0+gPRjMpDgZCDByUCCk4EEJwMJTgYSnAwkOBlIcDKQ4GQgwclAgpOBBCcDCU4GEpwMJDgZ
+      SHAykOBkIMHJQIKTgQQnAwlOBhJci9kH+Fm6rmNzcxO5XA4OhwOTk5OIRqOw2+3/uiedTuPx
+      8RGxWOwXnvS/0VSBSqUSotEocrkcfD4fdF2Hqqo4OzvD4OCg2cf7XzRVoHQ6jWw2i0Qigenp
+      adTrdRQKBbhcLtTrdeTzeRwcHOD+/h4DAwOYnZ2F0+n8cg3DMHB0dITT01MEAgEsLy+jvb0d
+      AFAoFLC/vw9N0zA6OoqxsbFv+385NpFUKsXW1laOj48zn8/TMIzGb8VikYqi0OPx0O/302az
+      cWpqirVajTc3N1RVlYZhcHV1lQ6HgyMjI/R6vRweHubr6yszmQzdbjc9Hg8DgQDtdjtVVTVx
+      2j81VaBqtcq5uTlarVYCoKIoTCQSNAyD1WqV5XKZJGkYBufn56koCovFYiPQw8MDg8Egl5aW
+      SJIXFxd0uVxMpVJUVZVtbW08OTkhSVYqFeq6btqsf2mqr7iWlhZsb2/DMAyQxN7eHhYWFrC2
+      tobj42OEw2Ekk0l8fn4iGAx+218ul/H29gZN05BMJlEqlRCPx9Hd3Y1YLAZN02CxWDAzM4OO
+      jg5sbGyYMOVXTRXo8PAQkUgE6+vrSCaTiMfjqNVq6O/vR6lUgtVqhdvtxu3tLS4vL7/tD4fD
+      6Ovrw9XVFXp6ejA0NISPjw9UKhVsbW1hd3cXkUgEi4uL8Pv9eHp6MmHKvzH7Ef4Z19fX7O3t
+      JQACoN1u58rKCqvVKu/u7tjV1UUADIVCnJiY+PaKI8lMJsNQKNS4htPp5Pn5OXd2duh0Ohvr
+      4XCY2WzW5IlJC9l8/w96f3+Hruvw+Xyw2WyN9VqthpeXF3i93i/r/0TTNACAx+NprNXrdTw/
+      PwMAOjs7YbWa/4JpykC/E/NvEemHZCDByUCCk4EEJwMJTgYSnAwkOBlIcDKQ4GQgwclAgvsD
+      tNwOOe8EE2UAAAAASUVORK5CYII=
     </thumbnail>
     <thumbnail height='192' name='Sales By Brand' width='192'>
       iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
